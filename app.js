@@ -4,26 +4,45 @@ class Ship {
     this.hull = hull;
     this.firepower = firepower;
     this.accuracy = accuracy;
-    this.attack = function (ship) {
-      let hitchance = Math.random();
-      if (this.accuracy > hitchance) {
-        ship.hull -= this.firepower;
-        return alert("You hit your target!");
-      } else {
-        return alert("You missed target...");
-      }
-    };
+    
+      
+    }
   }
-}
+
 //Created a child class for the enemy ship.
 class collectorShip extends Ship {
   constructor(hull, firepower, accuracy) {
     super(hull, firepower, accuracy);
+    collectorShip.attack = function (player) {
+      let hitchance = Math.random();
+      if (this.accuracy > hitchance) {
+        player.hull -= this.firepower;
+        return alert("Enemy hit you ...");
+      } else {
+        return alert("Enemy missed target!");
+      }
+    }
   }
 }
+//Created a child class for the player ship.
+class player extends Ship {
+  constructor(hull, firepower, accuracy) {
+    super(hull, firepower, accuracy);
+    this.attack = function (collectorShip) {
+      let hitchance = Math.random();
+      if (this.accuracy > hitchance) {
+        console.log(collectorShip)
+        collectorShip.hull -= this.firepower;
+        return alert("You hit your target!");
+      } else {
+        return alert("You missed target...");
+      }
+    }
+  }
+}
+//
 
-
-let ussNormandy = new Ship(20, 5, 0.7); // Player's hull = 20; Player's firepower = 5; Player's accuracy = 70%
+let ussNormandy = new player (20, 5, 0.7); // Player's hull = 20; Player's firepower = 5; Player's accuracy = 70%
 let collectorArr = []; // Declar & Init an empty array to .push enemy ship objects into while creating in the loop.
 for (let numofShip = 0; numofShip < 6; numofShip++) {
   let collector = new collectorShip(
@@ -33,20 +52,24 @@ for (let numofShip = 0; numofShip < 6; numofShip++) {
   );
   collectorArr.push(collector);
 }
+console.log(collectorShip)
 // Enemy's hull = Math.floor(Math.random() * 4) + 3,
 // Enemy's firepower = Math.floor(Math.random() * 3) + 2,
 // Enemy's accuracy = Math.random() * (0.8 - 0.6) + 0.6
 
 let i = 0;
-const attackRetreat = prompt(
-  `Attacking Ship #${i + 1} or retreating? [Respond attack/retreat]`
-);
+
+;
 // creating a function that simulates battle with prompts for player to make decisions (i.e Attack/Retreat)
-function game() {
+function game(ussNormandy,collectorArr) {
+  
+  const  attackRetreat = prompt(
+  `Attacking Ship #${i + 1} or retreating? [Respond attack/retreat]`)
   while (i < 6) {
     if (attackRetreat.toLowerCase() == "attack") {
       ussNormandy.attack(collectorArr[i]);
-      collectorArr[i].attack(ussNormandy);
+      console.log(collectorArr[i]);
+      collectorShip.attack(ussNormandy);
       if (ussNormandy.hull <= 0) {
         return alert("You Lose...");
       } else if (collectorArr[i].hull <= 0) {
@@ -71,6 +94,7 @@ function game() {
   } //while loop ends here
 } // function ends here
 
-game();// calling function that simulates battle to run the game.
+game(ussNormandy,collectorArr);// calling function that simulates battle to run the game.
+
 console.log(ussNormandy.hull);// Checking the Player health at the end of the simulation.
 console.log(collectorArr);// checking how many objects are left in the array (Should be zero).
